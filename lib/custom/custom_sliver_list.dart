@@ -3,8 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import 'custom_sliver_adaptor_element.dart';
+import 'custom_sliver_adaptor_widget.dart';
+
 const double precisionErrorTolerance = 1e-10;
-class CustomSliverList extends SliverMultiBoxAdaptorWidget {
+class CustomSliverList extends CustomSliverMultiBoxAdaptorWidget {
   /// Creates a sliver that places box children in a linear array.
   const CustomSliverList({
     Key key,
@@ -13,7 +16,7 @@ class CustomSliverList extends SliverMultiBoxAdaptorWidget {
 
   @override
   CustomRenderSliverList createRenderObject(BuildContext context) {
-    final SliverMultiBoxAdaptorElement element = context as SliverMultiBoxAdaptorElement;
+    final CustomSliverMultiBoxAdaptorElement element = context as CustomSliverMultiBoxAdaptorElement;
     return CustomRenderSliverList(childManager: element);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_list_view_study/custom/custom_list_view.dart';
+import 'package:flutter_list_view_study/custom/global_constant.dart';
 
 import 'cache_entity.dart';
 import 'fake_data.dart';
@@ -16,6 +17,21 @@ class ListDemoPageState extends State<ListDemoPage> {
     return CacheEntity(FakeData.imageList[index], " $index");
   });
 
+  final ScrollController controller = ScrollController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller.addListener(() {
+
+      GlobalConstant.direction = controller.position.userScrollDirection;
+      debugPrint('scroll direction ${GlobalConstant.direction}');
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -25,6 +41,8 @@ class ListDemoPageState extends State<ListDemoPage> {
         width: size.width,
         height: size.height,
         child: CustomListView.builder(
+          cacheExtent: 0,
+          controller: controller,
             itemCount: listData.length,
             itemBuilder: (ctx, index) {
               return buildItem(listData[index], index);

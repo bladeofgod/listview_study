@@ -152,13 +152,18 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
   @override
   void removeChild(RenderBox child) {
     final int index = renderObject.indexOf(child);
+    debugPrint('_child last index ${_childElements.lastKey()}');
     assert(_currentlyUpdatingChildIndex == null);
     assert(index >= 0);
     owner.buildScope(this, () {
       assert(_childElements.containsKey(index));
       try {
         _currentlyUpdatingChildIndex = index;
+        //origin code
         final Element result = updateChild(_childElements[index], null, index);
+
+        // int preLast = _childElements.lastKey() + 1;
+        // final Element result = updateChild(_childElements[index], _build(preLast), index);
         assert(result == null);
       } finally {
         _currentlyUpdatingChildIndex = null;
@@ -166,6 +171,13 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
       _childElements.remove(index);
       assert(!_childElements.containsKey(index));
     });
+  }
+
+  int indexOf(RenderBox child) {
+    assert(child != null);
+    final SliverMultiBoxAdaptorParentData childParentData = child.parentData as SliverMultiBoxAdaptorParentData;
+    assert(childParentData.index = null);
+    return childParentData.index;
   }
 
   static double _extrapolateMaxScrollOffset(
