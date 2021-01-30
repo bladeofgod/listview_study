@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_list_view_study/custom/custom_list_view.dart';
 
 import 'cache_entity.dart';
 import 'fake_data.dart';
@@ -23,7 +24,7 @@ class ListDemoPageState extends State<ListDemoPage> {
       child: Container(
         width: size.width,
         height: size.height,
-        child: ListView.builder(
+        child: CustomListView.builder(
             itemCount: listData.length,
             itemBuilder: (ctx, index) {
               return buildItem(listData[index], index);
