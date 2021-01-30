@@ -26,7 +26,7 @@ class ListDemoPageState extends State<ListDemoPage> {
     controller.addListener(() {
 
       GlobalConstant.direction = controller.position.userScrollDirection;
-      debugPrint('scroll direction ${GlobalConstant.direction}');
+      //debugPrint('scroll direction ${GlobalConstant.direction}');
     });
   }
 
@@ -41,7 +41,7 @@ class ListDemoPageState extends State<ListDemoPage> {
         width: size.width,
         height: size.height,
         child: CustomListView.builder(
-          cacheExtent: 0,
+          //cacheExtent: 0,
           controller: controller,
             itemCount: listData.length,
             itemBuilder: (ctx, index) {

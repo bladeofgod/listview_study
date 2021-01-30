@@ -6,6 +6,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_list_view_study/custom/global_constant.dart';
 
 import 'custom_sliver_adaptor_widget.dart';
 
@@ -152,7 +153,9 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
   @override
   void removeChild(RenderBox child) {
     final int index = renderObject.indexOf(child);
+    debugPrint('child element size ${_childElements.length}');
     debugPrint('_child last index ${_childElements.lastKey()}');
+    debugPrint(' remove child index  $index');
     assert(_currentlyUpdatingChildIndex == null);
     assert(index >= 0);
     owner.buildScope(this, () {
@@ -160,16 +163,18 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
       try {
         _currentlyUpdatingChildIndex = index;
         //origin code
-        final Element result = updateChild(_childElements[index], null, index);
+        //final Element result = updateChild(_childElements[index], null, index);
+        final int preLast = GlobalConstant.direction == ScrollDirection.reverse ?
+            (_childElements.lastKey() + 1).clamp(0, 19)
+            : (_childElements.firstKey()-1).clamp(0, 19);
 
-        // int preLast = _childElements.lastKey() + 1;
-        // final Element result = updateChild(_childElements[index], _build(preLast), index);
-        assert(result == null);
+        final Element result = updateChild(_childElements[index], _build(preLast), index);
+        //assert(result == null);
       } finally {
         _currentlyUpdatingChildIndex = null;
       }
-      _childElements.remove(index);
-      assert(!_childElements.containsKey(index));
+      //_childElements.remove(index);
+      //assert(!_childElements.containsKey(index));
     });
   }
 
