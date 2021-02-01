@@ -117,6 +117,10 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
       Element newChild;
       try {
         _currentlyUpdatingChildIndex = index;
+        //如果 在removeChild的时候不删除 _childElements对应的element
+        //那么，当执行此处的时候，不按index 从 _childElements 中取element，
+        //而是以_childElements.first/last 进行取出复用，这样应该不会触发 inflate（更好的性能）
+        //2021.2.1
         newChild = updateChild(_childElements[index], _build(index), index);
       } finally {
         _currentlyUpdatingChildIndex = null;
@@ -151,6 +155,12 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
     super.forgetChild(child);
   }
 
+  /// [_childElements] 类型为<int,Element>,
+  /// 对当前显示（包括缓存的）element做记录，
+  /// 假设一屏显示5个item，那么[_childElements]总是由5个元素，仅index会 = item的 index
+  /// 如果不在[removeChild]中移除 element,配合[createChild]的改造应该会提升性能
+  /// 2021.2.1
+
   @override
   void removeChild(RenderBox child) {
     final int index = renderObject.indexOf(child);
@@ -175,6 +185,7 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
       } finally {
         _currentlyUpdatingChildIndex = null;
       }
+      //不对
       _childElements.remove(index);
       //assert(!_childElements.containsKey(index));
     });
