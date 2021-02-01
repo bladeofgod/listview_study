@@ -339,6 +339,7 @@ abstract class CustomRenderSliverMultiBoxAdaptor extends RenderSliver
   /// [performLayout] is run, even if the arguments are both zero.
   @protected
   void collectGarbage(int leadingGarbage, int trailingGarbage) {
+    debugPrint('custom collect garbage');
     assert(_debugAssertChildListLocked());
     assert(childCount >= leadingGarbage + trailingGarbage);
     invokeLayoutCallback<SliverConstraints>((SliverConstraints constraints) {

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'custom_sliver_adaptor_element.dart';
+import 'custom_sliver_box_adaptor.dart';
 
 abstract class CustomSliverMultiBoxAdaptorWidget extends SliverWithKeepAliveWidget {
   /// Initializes fields for subclasses.
@@ -32,7 +33,7 @@ abstract class CustomSliverMultiBoxAdaptorWidget extends SliverWithKeepAliveWidg
   CustomSliverMultiBoxAdaptorElement createElement() => CustomSliverMultiBoxAdaptorElement(this);
 
   @override
-  RenderSliverMultiBoxAdaptor createRenderObject(BuildContext context);
+  CustomRenderSliverMultiBoxAdaptor createRenderObject(BuildContext context);
 
   /// Returns an estimate of the max scroll extent for all the children.
   ///

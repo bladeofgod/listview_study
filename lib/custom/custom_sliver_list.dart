@@ -1,10 +1,11 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter/rendering.dart' as originRendering;
 
 import 'custom_sliver_adaptor_element.dart';
 import 'custom_sliver_adaptor_widget.dart';
+import 'custom_sliver_box_adaptor.dart' ;
 
 const double precisionErrorTolerance = 1e-10;
 class CustomSliverList extends CustomSliverMultiBoxAdaptorWidget {
@@ -21,18 +22,18 @@ class CustomSliverList extends CustomSliverMultiBoxAdaptorWidget {
   }
 }
 
-class CustomRenderSliverList extends RenderSliverMultiBoxAdaptor {
+class CustomRenderSliverList extends CustomRenderSliverMultiBoxAdaptor {
   /// Creates a sliver that places multiple box children in a linear array along
   /// the main axis.
   ///
   /// The [childManager] argument must not be null.
   CustomRenderSliverList({
-    @required RenderSliverBoxChildManager childManager,
+    @required originRendering.RenderSliverBoxChildManager childManager,
   }) : super(childManager: childManager);
 
   @override
   void performLayout() {
-    final SliverConstraints constraints = this.constraints;
+    final originRendering.SliverConstraints constraints = this.constraints;
     childManager.didStartLayout();
     childManager.setDidUnderflow(false);
 
@@ -66,7 +67,7 @@ class CustomRenderSliverList extends RenderSliverMultiBoxAdaptor {
     if (firstChild == null) {
       if (!addInitialChild()) {
         // There are no children.
-        geometry = SliverGeometry.zero;
+        geometry = originRendering.SliverGeometry.zero;
         childManager.didFinishLayout();
         return;
       }
@@ -123,7 +124,7 @@ class CustomRenderSliverList extends RenderSliverMultiBoxAdaptor {
           // We ran out of children before reaching the scroll offset.
           // We must inform our parent that this sliver cannot fulfill
           // its contract and that we need a scroll offset correction.
-          geometry = SliverGeometry(
+          geometry = originRendering.SliverGeometry(
             scrollOffsetCorrection: -scrollOffset,
           );
           return;
@@ -135,7 +136,7 @@ class CustomRenderSliverList extends RenderSliverMultiBoxAdaptor {
       if (firstChildScrollOffset < -precisionErrorTolerance) {
         // Let's assume there is no child before the first child. We will
         // correct it on the next layout if it is not.
-        geometry = SliverGeometry(
+        geometry = originRendering.SliverGeometry(
           scrollOffsetCorrection: -firstChildScrollOffset,
         );
         final SliverMultiBoxAdaptorParentData childParentData = firstChild.parentData as SliverMultiBoxAdaptorParentData;
@@ -170,7 +171,7 @@ class CustomRenderSliverList extends RenderSliverMultiBoxAdaptor {
         // We only need to correct if the leading child actually has a
         // paint extent.
         if (firstChildScrollOffset < -precisionErrorTolerance) {
-          geometry = SliverGeometry(
+          geometry = originRendering.SliverGeometry(
             scrollOffsetCorrection: -firstChildScrollOffset,
           );
           return;
@@ -248,7 +249,7 @@ class CustomRenderSliverList extends RenderSliverMultiBoxAdaptor {
         collectGarbage(leadingGarbage - 1, 0);
         assert(firstChild == lastChild);
         final double extent = childScrollOffset(lastChild) + paintExtentOf(lastChild);
-        geometry = SliverGeometry(
+        geometry = originRendering.SliverGeometry(
           scrollExtent: extent,
           paintExtent: 0.0,
           maxPaintExtent: extent,
@@ -304,7 +305,7 @@ class CustomRenderSliverList extends RenderSliverMultiBoxAdaptor {
       to: endScrollOffset,
     );
     final double targetEndScrollOffsetForPaint = constraints.scrollOffset + constraints.remainingPaintExtent;
-    geometry = SliverGeometry(
+    geometry = originRendering.SliverGeometry(
       scrollExtent: estimatedMaxScrollOffset,
       paintExtent: paintExtent,
       cacheExtent: cacheExtent,

@@ -5,12 +5,13 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter/rendering.dart' as originRendering;
 import 'package:flutter_list_view_study/custom/global_constant.dart';
 
 import 'custom_sliver_adaptor_widget.dart';
+import 'custom_sliver_box_adaptor.dart';
 
-class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements RenderSliverBoxChildManager{
+class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements originRendering.RenderSliverBoxChildManager{
   /// Creates an element that lazily builds children for the given widget.
   CustomSliverMultiBoxAdaptorElement(CustomSliverMultiBoxAdaptorWidget widget) : super(widget);
 
@@ -18,7 +19,7 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
   CustomSliverMultiBoxAdaptorWidget get widget => super.widget as CustomSliverMultiBoxAdaptorWidget;
 
   @override
-  RenderSliverMultiBoxAdaptor get renderObject => super.renderObject as RenderSliverMultiBoxAdaptor;
+  CustomRenderSliverMultiBoxAdaptor get renderObject => super.renderObject as CustomRenderSliverMultiBoxAdaptor;
 
   @override
   void update(covariant CustomSliverMultiBoxAdaptorWidget newWidget) {
@@ -162,18 +163,19 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
       assert(_childElements.containsKey(index));
       try {
         _currentlyUpdatingChildIndex = index;
-        //origin code
-        //final Element result = updateChild(_childElements[index], null, index);
-        final int preLast = GlobalConstant.direction == ScrollDirection.reverse ?
-            (_childElements.lastKey() + 1).clamp(0, 19)
-            : (_childElements.firstKey()-1).clamp(0, 19);
-
-        final Element result = updateChild(_childElements[index], _build(preLast), index);
+        // origin code
+        final Element result = updateChild(_childElements[index], null, index);
+        // fixed code
+        // final int preLast = GlobalConstant.direction == ScrollDirection.reverse ?
+        //     (_childElements.lastKey() + 1).clamp(0, 19)
+        //     : (_childElements.firstKey()-1).clamp(0, 19);
+        //
+        // final Element result = updateChild(_childElements[index], _build(preLast), index);
         //assert(result == null);
       } finally {
         _currentlyUpdatingChildIndex = null;
       }
-      //_childElements.remove(index);
+      _childElements.remove(index);
       //assert(!_childElements.containsKey(index));
     });
   }
@@ -202,7 +204,7 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
 
   @override
   double estimateMaxScrollOffset(
-      SliverConstraints constraints, {
+      originRendering.SliverConstraints constraints, {
         int firstIndex,
         int lastIndex,
         double leadingScrollOffset,
