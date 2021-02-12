@@ -121,6 +121,7 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
         //那么，当执行此处的时候，不按index 从 _childElements 中取element，
         //而是以_childElements.first/last 进行取出复用，这样应该不会触发 inflate（更好的性能）
         //2021.2.1
+        debugPrint('create child $index');
         newChild = updateChild(_childElements[index], _build(index), index);
       } finally {
         _currentlyUpdatingChildIndex = null;
