@@ -69,8 +69,11 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
       for (final int index in _childElements.keys.toList()) {
         final Key key = _childElements[index].widget.key;
         final int newIndex = key == null ? null : widget.delegate.findIndexByKey(key);
+
+        //这里的childParentData.layoutOffset 只有三个值，应该是根据屏幕来定的（与child个数无关或缓存）
         final SliverMultiBoxAdaptorParentData childParentData =
         _childElements[index].renderObject?.parentData as SliverMultiBoxAdaptorParentData;
+        //debugPrint('layout offset : ${childParentData.layoutOffset}');
 
         if (childParentData != null && childParentData.layoutOffset != null)
           indexToLayoutOffset[index] = childParentData.layoutOffset;
@@ -86,6 +89,7 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
           // We do not want the remapped child to get deactivated during processElement.
           _childElements.remove(index);
         } else {
+
           newChildren.putIfAbsent(index, () => _childElements[index]);
         }
       }
@@ -139,7 +143,6 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
 
   @override
   Element updateChild(Element child, Widget newWidget, dynamic newSlot) {
-    debugPrint('update child');
     final SliverMultiBoxAdaptorParentData oldParentData = child?.renderObject?.parentData as SliverMultiBoxAdaptorParentData;
     final Element newChild = super.updateChild(child, newWidget, newSlot);
     final SliverMultiBoxAdaptorParentData newParentData = newChild?.renderObject?.parentData as SliverMultiBoxAdaptorParentData;
