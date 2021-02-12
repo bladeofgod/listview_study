@@ -1,8 +1,18 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_list_view_study/list_demo_page.dart';
 
 void main() {
+
+  test();
   runApp(MyApp());
+}
+
+
+void test(){
+  final SplayTreeMap<int,String> splayTreeMap = SplayTreeMap();
+  debugPrint('test f : ${splayTreeMap[0]}');
 }
 
 class MyApp extends StatelessWidget {

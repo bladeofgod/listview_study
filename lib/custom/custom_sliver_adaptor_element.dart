@@ -40,6 +40,7 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
     super.performRebuild();
     _currentBeforeChild = null;
     assert(_currentlyUpdatingChildIndex == null);
+    debugPrint('performRebuild');
     try {
       final SplayTreeMap<int, Element> newChildren = SplayTreeMap<int, Element>();
       final Map<int, double> indexToLayoutOffset = HashMap<int, double>();
@@ -110,6 +111,7 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
   @override
   void createChild(int index, { @required RenderBox after }) {
     assert(_currentlyUpdatingChildIndex == null);
+    debugPrint('len : ${_childElements.length}');
     owner.buildScope(this, () {
       final bool insertFirst = after == null;
       assert(insertFirst || _childElements[index-1] != null);
@@ -121,6 +123,7 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
         //那么，当执行此处的时候，不按index 从 _childElements 中取element，
         //而是以_childElements.first/last 进行取出复用，这样应该不会触发 inflate（更好的性能）
         //2021.2.1
+        //2021.2.12 demo 案例，初始创建3个(2个在屏，1个屏外)
         debugPrint('create child $index');
         newChild = updateChild(_childElements[index], _build(index), index);
       } finally {
@@ -136,12 +139,15 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
 
   @override
   Element updateChild(Element child, Widget newWidget, dynamic newSlot) {
+    debugPrint('update child');
     final SliverMultiBoxAdaptorParentData oldParentData = child?.renderObject?.parentData as SliverMultiBoxAdaptorParentData;
     final Element newChild = super.updateChild(child, newWidget, newSlot);
     final SliverMultiBoxAdaptorParentData newParentData = newChild?.renderObject?.parentData as SliverMultiBoxAdaptorParentData;
 
     // Preserve the old layoutOffset if the renderObject was swapped out.
     if (oldParentData != newParentData && oldParentData != null && newParentData != null) {
+      //测试 demo里 不会进入这个if
+      //debugPrint('update child in if');
       newParentData.layoutOffset = oldParentData.layoutOffset;
     }
     return newChild;
