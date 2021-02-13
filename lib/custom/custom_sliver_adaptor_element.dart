@@ -34,6 +34,9 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
 
   final SplayTreeMap<int, Element> _childElements = SplayTreeMap<int, Element>();
   RenderBox _currentBeforeChild;
+  ///标记废弃的child element
+  /// * 总是标记靠近边界的值
+  final List<int> removeMarkers = [];
 
   @override
   void performRebuild() {
@@ -195,8 +198,17 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
       } finally {
         _currentlyUpdatingChildIndex = null;
       }
+      debugPrint('remove index  $index');
       //不对
       _childElements.remove(index);
+      //暂定缓存2个
+      if(removeMarkers.length == 2){
+        removeMarkers.removeAt(0);
+        removeMarkers.add(index);
+      }else{
+        removeMarkers.add(index);
+      }
+      debugPrint('remove markers : $removeMarkers');
       //assert(!_childElements.containsKey(index));
     });
   }
