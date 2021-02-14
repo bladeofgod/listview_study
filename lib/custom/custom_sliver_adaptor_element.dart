@@ -36,7 +36,7 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
   RenderBox _currentBeforeChild;
   ///标记废弃的child element
   /// * 总是标记靠近边界的值
-  final List<int> removeMarkers = [];
+  //final List<int> removeMarkers = [];
 
   @override
   void performRebuild() {
@@ -134,8 +134,8 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
         debugPrint('create child $index');
         debugPrint('child of index is ${_childElements[index]}');
         //final Element temp = removeMarkers.isEmpty ? _childElements[index] : removeMarkers.first;
-        newChild = updateChild(_childElements[index], _build(index), index);
         //newChild = updateChild(_childElements[index], _build(index), index);
+        newChild = updateChild(_childElements[index], _build(index), index);
       } finally {
         _currentlyUpdatingChildIndex = null;
       }
@@ -206,13 +206,13 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
       //_childElements.remove(index);
       debugPrint('child elements : $_childElements');
       //暂定缓存4个
-      if(removeMarkers.length == 4){
-        removeMarkers.removeAt(0);
-        removeMarkers.add(index);
-      }else{
-        removeMarkers.add(index);
-      }
-      debugPrint('remove markers : $removeMarkers');
+      // if(removeMarkers.length == 4){
+      //   removeMarkers.removeAt(0);
+      //   removeMarkers.add(index);
+      // }else{
+      //   removeMarkers.add(index);
+      // }
+      // debugPrint('remove markers : $removeMarkers');
       //assert(!_childElements.containsKey(index));
     });
   }
