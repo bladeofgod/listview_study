@@ -132,6 +132,7 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
         //2021.2.1
         //2021.2.12 demo 案例，初始创建3个(2个在屏，1个屏外)
         debugPrint('create child $index');
+        debugPrint('child of index is ${_childElements[index]}');
         newChild = updateChild(_childElements[index], _build(index), index);
       } finally {
         _currentlyUpdatingChildIndex = null;
@@ -199,10 +200,11 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
         _currentlyUpdatingChildIndex = null;
       }
       debugPrint('remove index  $index');
-      //不对
+      //childElements 总是有3个元素。
       _childElements.remove(index);
-      //暂定缓存2个
-      if(removeMarkers.length == 2){
+      debugPrint('child elements : $_childElements');
+      //暂定缓存4个
+      if(removeMarkers.length == 4){
         removeMarkers.removeAt(0);
         removeMarkers.add(index);
       }else{
