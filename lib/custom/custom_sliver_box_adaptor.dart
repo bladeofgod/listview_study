@@ -51,6 +51,9 @@ abstract class CustomRenderSliverMultiBoxAdaptor extends RenderSliver
   /// The nodes being kept alive despite not being visible.
   final Map<int, RenderBox> _keepAliveBucket = <int, RenderBox>{};
 
+  /// to reuse element
+  //final Map<int,RenderBox> reuseElement = <int,RenderBox>{};
+
   List<RenderBox> _debugDanglingKeepAlives;
 
   /// Indicates whether integrity check is enabled.
@@ -183,6 +186,7 @@ abstract class CustomRenderSliverMultiBoxAdaptor extends RenderSliver
         insert(child, after: after);
         childParentData._keptAlive = false;
       } else {
+        debugPrint('box adapter : _createOrObtainChild $index');
         _childManager.createChild(index, after: after);
       }
     });

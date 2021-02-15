@@ -38,6 +38,8 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
   /// * 总是标记靠近边界的值
   //final List<int> removeMarkers = [];
 
+  final List<int> cacheElement = [];
+
   @override
   void performRebuild() {
     super.performRebuild();
@@ -119,6 +121,10 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
   void createChild(int index, { @required RenderBox after }) {
     assert(_currentlyUpdatingChildIndex == null);
     debugPrint('len : ${_childElements.length}');
+    // if(cacheElement.isNotEmpty){
+    //   newCreateChild(index, after: after);
+    //   return;
+    // }
     owner.buildScope(this, () {
       final bool insertFirst = after == null;
       assert(insertFirst || _childElements[index-1] != null);
@@ -133,8 +139,7 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
         //2021.2.12 demo 案例，初始创建3个(2个在屏，1个屏外)
         debugPrint('create child $index');
         debugPrint('child of index is ${_childElements[index]}');
-        //final Element temp = removeMarkers.isEmpty ? _childElements[index] : removeMarkers.first;
-        //newChild = updateChild(_childElements[index], _build(index), index);
+        //origin
         newChild = updateChild(_childElements[index], _build(index), index);
       } finally {
         _currentlyUpdatingChildIndex = null;
@@ -145,6 +150,51 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
         _childElements.remove(index);
       }
     });
+  }
+
+  ///这种更新方式是错误的
+  void newCreateChild(int index, { @required RenderBox after }) {
+    // owner.buildScope(this,(){
+    //   final bool insertFirst = after == null;
+    //   assert(insertFirst || _childElements[index-1] != null);
+    //   _currentBeforeChild = insertFirst ? null : (_childElements[index-1].renderObject as RenderBox);
+    //   Element newChild;
+    //   try {
+    //     _currentlyUpdatingChildIndex = index;
+    //
+    //     debugPrint('create child $index');
+    //     debugPrint('newCreate  ${_childElements[index]}');
+    //     newChild = updateChild(_childElements[cacheElement.removeAt(0)], _build(index), index);
+    //
+    //   } finally {
+    //     _currentlyUpdatingChildIndex = null;
+    //   }
+    //   if (newChild != null) {
+    //     _childElements[index] = newChild;
+    //   } else {
+    //     _childElements.remove(index);
+    //   }
+    // });
+    final bool insertFirst = after == null;
+    assert(insertFirst || _childElements[index-1] != null);
+    _currentBeforeChild = insertFirst ? null : (_childElements[index-1].renderObject as RenderBox);
+    Element newChild;
+    try {
+      _currentlyUpdatingChildIndex = index;
+
+      debugPrint('create child $index');
+      debugPrint('newCreate  ${_childElements[index]}');
+      newChild = updateChild(_childElements[cacheElement.removeAt(0)], _build(index), index);
+
+    } finally {
+      _currentlyUpdatingChildIndex = null;
+    }
+    if (newChild != null) {
+      _childElements[index] = newChild;
+    } else {
+      _childElements.remove(index);
+    }
+
   }
 
   @override
@@ -202,8 +252,12 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
         _currentlyUpdatingChildIndex = null;
       }
       debugPrint('remove index  $index');
+      //缓存一下
+      //cacheElement.add(index);
       //childElements 总是有3个元素。
+      // 这里要保持不变
       _childElements.remove(index);
+
       debugPrint('child elements : $_childElements');
       //暂定缓存4个
       // if(removeMarkers.length == 4){
