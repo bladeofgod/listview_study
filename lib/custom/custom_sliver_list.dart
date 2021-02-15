@@ -15,6 +15,8 @@ class CustomSliverList extends CustomSliverMultiBoxAdaptorWidget {
     @required SliverChildDelegate delegate,
   }) : super(key: key, delegate: delegate);
 
+  ///通过 [CustomRenderSliverList]的 [.remove]等方法进行缓存清除，同时修改[collect..]方法进行缓存控制
+  /// 以达到优化的效果
   @override
   CustomRenderSliverList createRenderObject(BuildContext context) {
     final CustomSliverMultiBoxAdaptorElement element = context as CustomSliverMultiBoxAdaptorElement;

@@ -203,7 +203,7 @@ class CustomSliverMultiBoxAdaptorElement extends RenderObjectElement implements 
       }
       debugPrint('remove index  $index');
       //childElements 总是有3个元素。
-      //_childElements.remove(index);
+      _childElements.remove(index);
       debugPrint('child elements : $_childElements');
       //暂定缓存4个
       // if(removeMarkers.length == 4){
